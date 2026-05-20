@@ -1,0 +1,19 @@
+# Node.js の依存パッケージ（gitには入れない）
+node_modules/
+
+# 環境変数ファイル（APIキーなどの秘密情報）
+.env
+.env.local
+.env.production
+
+# ログファイル
+*.log
+npm-debug.log*
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# エディタの設定ファイル
+.vscode/
+.idea/

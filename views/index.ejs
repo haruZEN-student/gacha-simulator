@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <!-- レスポンシブ対応のための設定 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+
+  <!-- Google Fonts（近未来フォント） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <!-- CSSファイルの読み込み -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ============================
+    背景エフェクト（パーティクル）
+  ============================ -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- ============================
+    スキャンライン演出
+  ============================ -->
+  <div class="scanlines"></div>
+
+  <!-- ============================
+    メインコンテナ
+  ============================ -->
+  <div class="container">
+
+    <!-- ヘッダー -->
+    <header class="header">
+      <div class="header-glow"></div>
+      <div class="header-inner">
+        <div class="logo-icon">★</div>
+        <h1 class="logo-text">STAR GACHA</h1>
+        <p class="logo-sub">— 星霊召喚システム —</p>
+      </div>
+    </header>
+
+    <!-- ============================
+      ガチャ演出エリア（アニメーション表示部）
+    ============================ -->
+    <section class="gacha-stage" id="gachaStage">
+
+      <!-- 通常待機画面 -->
+      <div class="stage-idle" id="stageIdle">
+        <div class="orb-container">
+          <div class="orb">
+            <div class="orb-inner">
+              <span class="orb-symbol">✦</span>
+            </div>
+            <div class="orb-ring ring1"></div>
+            <div class="orb-ring ring2"></div>
+            <div class="orb-ring ring3"></div>
+          </div>
+        </div>
+        <p class="idle-text">ガチャを引いて星霊を召喚せよ</p>
+      </div>
+
+      <!-- 演出中（ローディング） -->
+      <div class="stage-loading" id="stageLoading" style="display:none;">
+        <div class="loading-stars">
+          <span>✦</span><span>★</span><span>✦</span><span>★</span><span>✦</span>
+        </div>
+        <p class="loading-text">召 喚 中 . . .</p>
+      </div>
+
+      <!-- 結果表示（1連） -->
+      <div class="stage-result" id="stageResult" style="display:none;">
+        <div class="result-card" id="resultCard">
+          <div class="card-rarity" id="cardRarity"></div>
+          <div class="card-emoji" id="cardEmoji"></div>
+          <div class="card-name" id="cardName"></div>
+          <div class="card-title" id="cardTitle"></div>
+          <div class="card-element" id="cardElement"></div>
+          <div class="card-desc" id="cardDesc"></div>
+        </div>
+        <button class="btn btn-back" id="btnBack">▶ 続けて引く</button>
+      </div>
+
+      <!-- 結果表示（10連） -->
+      <div class="stage-result-ten" id="stageResultTen" style="display:none;">
+        <div class="ten-results" id="tenResults"></div>
+        <button class="btn btn-back" id="btnBackTen">▶ 続けて引く</button>
+      </div>
+
+    </section>
+
+    <!-- ============================
+      ガチャボタンエリア
+    ============================ -->
+    <section class="gacha-buttons">
+      <button class="btn btn-single" id="btnSingle">
+        <span class="btn-icon">✦</span>
+        <span class="btn-label">1回召喚</span>
+        <span class="btn-cost">× 1</span>
+      </button>
+      <button class="btn btn-ten" id="btnTen">
+        <span class="btn-icon">★</span>
+        <span class="btn-label">10連召喚</span>
+        <span class="btn-cost">SR確定</span>
+      </button>
+      <button class="btn btn-reset" id="btnReset">
+        <span class="btn-label">🗑 リセット</span>
+      </button>
+    </section>
+
+    <!-- ============================
+      統計情報
+    ============================ -->
+    <section class="stats-section" id="statsSection">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-label">総召喚数</span>
+          <span class="stat-value" id="statTotal">0</span>
+        </div>
+        <div class="stat-item ssr">
+          <span class="stat-label">SSR</span>
+          <span class="stat-value" id="statSSR">0</span>
+        </div>
+        <div class="stat-item sr">
+          <span class="stat-label">SR</span>
+          <span class="stat-value" id="statSR">0</span>
+        </div>
+        <div class="stat-item r">
+          <span class="stat-label">R</span>
+          <span class="stat-value" id="statR">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================
+      排出履歴
+    ============================ -->
+    <section class="history-section">
+      <h2 class="section-title">◈ 召喚履歴</h2>
+      <div class="history-list" id="historyList">
+        <p class="history-empty">まだ召喚していません</p>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+      <p>STAR GACHA SYSTEM v1.0 — Node.js × Express × EJS</p>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- JavaScriptファイルの読み込み -->
+  <script src="/js/gacha.js"></script>
+
+</body>
+</html>

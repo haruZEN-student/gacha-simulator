@@ -1,0 +1,823 @@
+/* ============================================================
+   style.css - ゲーム風サイバーUIスタイルシート
+   近未来・SF・崩壊スターレイル風デザイン
+   ============================================================ */
+
+/* ============================
+   CSS変数（カラーパレット）
+   ============================ */
+:root {
+  --bg-black:       #010510;      /* 最も暗い背景 */
+  --bg-dark:        #040d1f;      /* ダーク背景 */
+  --bg-card:        #060e22;      /* カード背景 */
+  --accent-blue:    #00c8ff;      /* メインアクセント（シアン） */
+  --accent-purple:  #a855f7;      /* サブアクセント（パープル） */
+  --accent-pink:    #f0abfc;      /* 3rdアクセント（ピンク） */
+  --accent-gold:    #fbbf24;      /* ゴールド（SSR用） */
+  --accent-silver:  #94a3b8;      /* シルバー（SR用） */
+  --accent-bronze:  #b45309;      /* ブロンズ（R用） */
+  --text-primary:   #e2e8f0;      /* メインテキスト */
+  --text-dim:       #475569;      /* 薄いテキスト */
+  --border-glow:    rgba(0, 200, 255, 0.3);  /* ボーダーグロー */
+  --font-game:      'Orbitron', monospace;    /* ゲームフォント */
+  --font-jp:        'Noto Sans JP', sans-serif; /* 日本語フォント */
+}
+
+/* ============================
+   リセット・ベース
+   ============================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-black);
+  color: var(--text-primary);
+  font-family: var(--font-jp);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* 背景のグラデーション */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 200, 255, 0.06) 0%, transparent 60%);
+}
+
+/* ============================
+   背景パーティクル
+   ============================ */
+.bg-particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* パーティクルはJSで動的に生成 */
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  animation: floatUp linear infinite;
+  opacity: 0;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+}
+
+/* ============================
+   スキャンライン演出
+   ============================ */
+.scanlines {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+/* ============================
+   コンテナ
+   ============================ */
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
+}
+
+/* ============================
+   ヘッダー
+   ============================ */
+.header {
+  text-align: center;
+  padding: 40px 20px 30px;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.header-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; height: 100px;
+  background: radial-gradient(ellipse, rgba(0, 200, 255, 0.15), transparent);
+  pointer-events: none;
+}
+
+.header-inner { position: relative; }
+
+.logo-icon {
+  font-size: 2rem;
+  color: var(--accent-blue);
+  animation: pulse 2s ease-in-out infinite;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.logo-text {
+  font-family: var(--font-game);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  /* テキストグラデーション */
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  position: relative;
+}
+
+/* ロゴの下のグロー効果 */
+.logo-text::after {
+  content: 'STAR GACHA';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: blur(12px);
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.logo-sub {
+  font-family: var(--font-jp);
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  letter-spacing: 0.3em;
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+/* ============================
+   ガチャステージ（演出エリア）
+   ============================ */
+.gacha-stage {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(0, 200, 255, 0.05),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ステージの上下の光るライン */
+.gacha-stage::before,
+.gacha-stage::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+  opacity: 0.4;
+}
+.gacha-stage::before { top: 0; }
+.gacha-stage::after  { bottom: 0; }
+
+/* ============================
+   オーブ（待機中のアニメーション）
+   ============================ */
+.stage-idle {
+  text-align: center;
+  padding: 40px;
+}
+
+.orb-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.orb {
+  width: 120px; height: 120px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orb-inner {
+  width: 80px; height: 80px;
+  background: radial-gradient(circle at 35% 35%, rgba(0, 200, 255, 0.6), rgba(168, 85, 247, 0.4));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: orbPulse 3s ease-in-out infinite;
+  box-shadow:
+    0 0 20px rgba(0, 200, 255, 0.4),
+    0 0 60px rgba(168, 85, 247, 0.2);
+}
+
+.orb-symbol {
+  font-size: 2rem;
+  color: white;
+  opacity: 0.9;
+}
+
+/* 回転するリング */
+.orb-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+.ring1 {
+  width: 100px; height: 100px;
+  border-top-color: var(--accent-blue);
+  border-right-color: var(--accent-blue);
+  animation: rotate 3s linear infinite;
+  opacity: 0.6;
+}
+
+.ring2 {
+  width: 115px; height: 115px;
+  border-bottom-color: var(--accent-purple);
+  border-left-color: var(--accent-purple);
+  animation: rotate 5s linear infinite reverse;
+  opacity: 0.4;
+}
+
+.ring3 {
+  width: 130px; height: 130px;
+  border-top-color: var(--accent-pink);
+  animation: rotate 8s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.idle-text {
+  color: var(--accent-blue);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+/* ============================
+   ローディング演出
+   ============================ */
+.stage-loading {
+  text-align: center;
+}
+
+.loading-stars {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.loading-stars span {
+  font-size: 2rem;
+  animation: starSpin 1s ease-in-out infinite;
+  color: var(--accent-blue);
+}
+
+/* 各星のアニメーションを少しずつずらす */
+.loading-stars span:nth-child(1) { animation-delay: 0s;    color: var(--accent-blue); }
+.loading-stars span:nth-child(2) { animation-delay: 0.1s;  color: var(--accent-purple); }
+.loading-stars span:nth-child(3) { animation-delay: 0.2s;  color: var(--accent-pink); }
+.loading-stars span:nth-child(4) { animation-delay: 0.3s;  color: var(--accent-purple); }
+.loading-stars span:nth-child(5) { animation-delay: 0.4s;  color: var(--accent-blue); }
+
+@keyframes starSpin {
+  0%, 100% { transform: scale(1) rotate(0deg);   opacity: 0.3; }
+  50%       { transform: scale(1.5) rotate(180deg); opacity: 1; }
+}
+
+.loading-text {
+  font-family: var(--font-game);
+  font-size: 1.2rem;
+  letter-spacing: 0.4em;
+  color: var(--accent-blue);
+  animation: flicker 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+/* ============================
+   結果カード（1連）
+   ============================ */
+.stage-result {
+  text-align: center;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: resultAppear 0.4s ease-out;
+}
+
+@keyframes resultAppear {
+  from { opacity: 0; transform: scale(0.8) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.result-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-glow);
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* カードの輝くボーダー効果 */
+.result-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* レアリティによる色変え */
+.result-card.rarity-SSR { border-color: var(--accent-gold); box-shadow: 0 0 30px rgba(251, 191, 36, 0.4); }
+.result-card.rarity-SR  { border-color: var(--accent-silver); box-shadow: 0 0 20px rgba(148, 163, 184, 0.3); }
+.result-card.rarity-R   { border-color: var(--accent-bronze); box-shadow: 0 0 10px rgba(180, 83, 9, 0.2); }
+
+.card-rarity {
+  font-family: var(--font-game);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+
+.card-rarity.rarity-SSR { color: var(--accent-gold); text-shadow: 0 0 10px var(--accent-gold); }
+.card-rarity.rarity-SR  { color: var(--accent-silver); text-shadow: 0 0 8px var(--accent-silver); }
+.card-rarity.rarity-R   { color: var(--accent-bronze); }
+
+.card-emoji {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  animation: emojiPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes emojiPop {
+  from { transform: scale(0) rotate(-30deg); }
+  to   { transform: scale(1) rotate(0); }
+}
+
+.card-name {
+  font-family: var(--font-game);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.card-element {
+  display: inline-block;
+  padding: 2px 12px;
+  border: 1px solid currentColor;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  color: var(--accent-purple);
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-family: var(--font-jp);
+}
+
+/* ============================
+   10連結果グリッド
+   ============================ */
+.stage-result-ten {
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  animation: resultAppear 0.4s ease-out;
+}
+
+.ten-results {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* 10連用の小さいカード */
+.mini-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: default;
+  transition: transform 0.2s;
+  animation: cardFlyIn 0.3s ease-out both;
+}
+
+/* 各カードが順番に出てくるアニメーション */
+.mini-card:nth-child(1)  { animation-delay: 0.05s; }
+.mini-card:nth-child(2)  { animation-delay: 0.10s; }
+.mini-card:nth-child(3)  { animation-delay: 0.15s; }
+.mini-card:nth-child(4)  { animation-delay: 0.20s; }
+.mini-card:nth-child(5)  { animation-delay: 0.25s; }
+.mini-card:nth-child(6)  { animation-delay: 0.30s; }
+.mini-card:nth-child(7)  { animation-delay: 0.35s; }
+.mini-card:nth-child(8)  { animation-delay: 0.40s; }
+.mini-card:nth-child(9)  { animation-delay: 0.45s; }
+.mini-card:nth-child(10) { animation-delay: 0.50s; }
+
+@keyframes cardFlyIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mini-card:hover { transform: translateY(-4px) scale(1.05); }
+
+.mini-card.rarity-SSR {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.05);
+}
+.mini-card.rarity-SR {
+  border-color: var(--accent-silver);
+  box-shadow: 0 0 8px rgba(148, 163, 184, 0.2);
+}
+
+.mini-rarity {
+  font-family: var(--font-game);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.mini-rarity.rarity-SSR { color: var(--accent-gold); }
+.mini-rarity.rarity-SR  { color: var(--accent-silver); }
+.mini-rarity.rarity-R   { color: var(--accent-bronze); }
+
+.mini-emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+
+.mini-name {
+  font-size: 0.65rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================
+   ボタン
+   ============================ */
+.gacha-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+/* ボタン共通 */
+.btn {
+  font-family: var(--font-game);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 24px;
+}
+
+/* ボタンのホバー時の光り */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.btn:hover::after { opacity: 1; }
+.btn:active { transform: scale(0.96); }
+
+/* 1回召喚ボタン */
+.btn-single {
+  background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+  color: white;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+  min-width: 140px;
+}
+.btn-single:hover { box-shadow: 0 6px 25px rgba(14, 165, 233, 0.6); transform: translateY(-2px); }
+
+/* 10連ボタン */
+.btn-ten {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+  min-width: 140px;
+}
+.btn-ten:hover { box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6); transform: translateY(-2px); }
+
+/* リセットボタン */
+.btn-reset {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 100px;
+  font-family: var(--font-jp);
+}
+.btn-reset:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
+
+.btn-back {
+  background: rgba(0, 200, 255, 0.1);
+  color: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+  padding: 10px 28px;
+  font-size: 0.8rem;
+}
+.btn-back:hover { background: var(--accent-blue); color: var(--bg-black); }
+
+.btn-icon { font-size: 1.2rem; }
+.btn-label { font-size: 0.85rem; }
+.btn-cost  { font-size: 0.7rem; opacity: 0.7; font-family: var(--font-jp); }
+
+/* ============================
+   統計情報
+   ============================ */
+.stats-section {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.stats-inner {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 70px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.stat-item.ssr { border-color: rgba(251, 191, 36, 0.3); }
+.stat-item.sr  { border-color: rgba(148, 163, 184, 0.3); }
+.stat-item.r   { border-color: rgba(180, 83, 9, 0.3); }
+
+.stat-label {
+  font-family: var(--font-game);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.stat-value {
+  font-family: var(--font-game);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-item.ssr .stat-value { color: var(--accent-gold); }
+.stat-item.sr  .stat-value { color: var(--accent-silver); }
+.stat-item.r   .stat-value { color: var(--accent-bronze); }
+
+/* ============================
+   履歴リスト
+   ============================ */
+.history-section {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: var(--font-game);
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* スクロールバーのスタイル */
+.history-list::-webkit-scrollbar { width: 4px; }
+.history-list::-webkit-scrollbar-track { background: transparent; }
+.history-list::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
+
+.history-empty {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 20px;
+}
+
+/* 履歴の1行 */
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  animation: slideIn 0.3s ease-out;
+  font-size: 0.85rem;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.history-item.rarity-SSR { border-left-color: var(--accent-gold); background: rgba(251, 191, 36, 0.05); }
+.history-item.rarity-SR  { border-left-color: var(--accent-silver); }
+.history-item.rarity-R   { border-left-color: rgba(180, 83, 9, 0.5); }
+
+.history-rarity {
+  font-family: var(--font-game);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  min-width: 32px;
+}
+.history-rarity.rarity-SSR { color: var(--accent-gold); }
+.history-rarity.rarity-SR  { color: var(--accent-silver); }
+.history-rarity.rarity-R   { color: var(--accent-bronze); }
+
+.history-emoji { font-size: 1.2rem; }
+
+.history-name {
+  font-weight: 700;
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.history-element {
+  font-size: 0.7rem;
+  color: var(--accent-purple);
+  opacity: 0.7;
+}
+
+.history-time {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ============================
+   フッター
+   ============================ */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  font-family: var(--font-game);
+}
+
+/* ============================
+   SSR演出オーバーレイ
+   ============================ */
+.ssr-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(251, 191, 36, 0.4), transparent);
+  pointer-events: none;
+  z-index: 100;
+  animation: ssrFlash 0.8s ease-out forwards;
+}
+
+@keyframes ssrFlash {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================
+   レスポンシブ（スマートフォン対応）
+   ============================ */
+@media (max-width: 600px) {
+  .header { padding: 24px 16px 16px; }
+  .logo-text { font-size: 2rem; }
+
+  .gacha-stage { min-height: 260px; }
+
+  .gacha-buttons {
+    gap: 8px;
+  }
+  .btn-single, .btn-ten { min-width: 120px; padding: 12px 16px; }
+  .btn-reset { min-width: 90px; }
+
+  /* 10連グリッドをスマホでは2列に */
+  .ten-results {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+
+  .mini-card { padding: 8px 4px; }
+  .mini-emoji { font-size: 1.2rem; }
+  .mini-name { font-size: 0.55rem; }
+
+  .stats-inner { gap: 6px; }
+  .stat-value { font-size: 1.4rem; }
+
+  .history-item { padding: 6px 10px; }
+  .history-time { display: none; } /* スマホでは時刻を非表示 */
+}
+
+@media (max-width: 400px) {
+  .ten-results { grid-template-columns: repeat(5, 1fr); }
+  .mini-name { display: none; }
+}
