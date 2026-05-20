@@ -1,29 +1,6 @@
 # ⭐ STAR GACHA - 星霊召喚システム
 
-> Node.js + Express + EJS で作った近未来ゲーム風ガチャシミュレーター
-
-## 📁 フォルダ構成
-
-```
-gacha-simulator/
-├── server.js                 ← ① アプリのメインファイル（ここから起動）
-├── package.json              ← ② npmパッケージの設定
-├── .gitignore                ← gitで管理しないファイルの設定
-│
-├── data/
-│   └── characters.js         ← ③ キャラクターデータ・抽選ロジック
-│
-├── routes/
-│   └── gacha.js              ← ④ ガチャAPIのルート定義
-│
-├── views/
-│   └── index.ejs             ← ⑤ HTMLテンプレート（EJS形式）
-│
-└── public/
-    ├── css/
-    │   └── style.css         ← ⑥ スタイルシート（ゲーム風デザイン）
-    └── js/
-        └── gacha.js          ← ⑦ ブラウザで動くJavaScript
+近未来ゲーム風ガチャシミュレーター
 
 ## 🎮 機能一覧
 
