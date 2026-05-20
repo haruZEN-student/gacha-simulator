@@ -234,3 +234,4 @@ MIT License - 学習・個人利用・改変自由です。
 
 *STAR GACHA SYSTEM v1.0 — Built with Node.js × Express × EJS*
 "# Gacha-Simulation" 
+"# Gacha-Simulation"  
